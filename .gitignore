@@ -1,0 +1,11 @@
+media/
+branch/__pycache__/
+djcines/__pycache__/
+mail/__pycache__/
+movies/__pycache__/
+points/__pycache__/
+survey/__pycache__/
+user/__pycache__/
+utils/__pycache__/
+.scannerwork/
+*.pyc

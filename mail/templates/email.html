@@ -1,0 +1,98 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --very-light-pink: #C7C7C7;
+            --text-input-fiel: #F7F7F7;
+            --hospital-yellow: rgb(255, 245, 109);
+            --hospital-red: rgb(253, 93, 93);
+            --white: #FFFFFF;
+            --black: #000000;
+            --sm: 14px;
+            --md: 16px;
+            --lg: 18px;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            margin: 0;
+        }
+
+        section {
+            margin-top: 10px;
+            border-radius: 50px;
+            font-size: 18px;
+            padding: 15px;
+            align-items: center;
+            text-align: center;
+            width: 500px;
+            background-image: linear-gradient(0deg,
+                    rgba(255, 245, 109, 0) 25%,
+                    rgba(253, 93, 93, 1) 0%);
+        }
+
+        section p:nth-child(2) {
+            text-shadow: 1px 0px 7px black;
+
+        }
+
+        section p:nth-child(3) {
+            text-shadow: 1px 0px 7px black;
+
+        }
+
+        section p:nth-child(4) {
+            text-shadow: 1px 0px 7px black;
+
+        }
+
+        p {
+            color: rgb(255, 255, 255);
+        }
+
+        .password-container {
+            margin-top: 45px;
+            background: var(--very-light-pink);
+            width: 170px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+        }
+
+        .password-container p {
+            color: black;
+            font-size: 30px;
+        }
+
+        button {
+            background: var(--hospital-red);
+            border-radius: 15px;
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            margin-top: 20px;
+            color: var(--white);
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+    <p>Hola {{ name }}!</p>
+    <p>Tu contraseña se ha cambiado, tu nueva contraseña para ingresar:</p>
+        <div class="password-container">
+            <p>{{ password }}</p>
+        </div>
+    </section>
+</body>
+
+</html>
