@@ -9,3 +9,4 @@ user/__pycache__/
 utils/__pycache__/
 .scannerwork/
 *.pyc
+env/
