@@ -126,9 +126,8 @@ class EmployeeSerializer(serializers.Serializer):
         instanceimage.rol_id=validate_data.get('rol_id')
         instanceimage.birth=validate_data.get('birth')
         instanceimage.save()
-        SendNew(instance.first_name+" "+instance.last_name,validate_data.get('password'),instance.email)
-        qr(instance.id)
         set_menu(instance.id,instanceimage.rol_id)
+        qr(instance.id)
         return instance
     def validate_username(self,data):
         users= User.objects.filter(username=data)
