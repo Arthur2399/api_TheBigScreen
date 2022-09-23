@@ -9,6 +9,7 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     path('createu', views.usersNew.as_view(), name='Crear Usuario Mobil'),
     path('createe',views.EmployeeNew.as_view(), name='Crear Empleado'),
+    path('updatee/<id>',views.EmployeeUpdate.as_view(), name='Actualizar Empleado'),
     path('liste',views.EmployeeList.as_view(), name='Listar Empleados'),   
     path('user',views.UserProfile.as_view(), name='Datos de Usuario'),
     path('employee',views.EmployeeProfile.as_view(), name='Datos de Empleado'),

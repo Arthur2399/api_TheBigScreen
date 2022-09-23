@@ -23,7 +23,7 @@ class image(models.Model):
     ci=models.CharField(verbose_name="Cedula Identificacion",blank=True,null=True,max_length=10)
     birth=models.DateField(verbose_name="Fecha de Nacimiento",blank=True,null=True)
     class meta:
-        verbose_name='Image'
-        verbose_name_plural='Images'
+        verbose_name='Usuario Ext'
+        verbose_name_plural='Usuarios Ext'
     def __str__(self):
         return self.user.username

@@ -49,27 +49,31 @@ class NextPremiere (APIView):
         try:
             date=timezone.now().strftime("%Y-%m-%d")
             movie=models.movies.objects.filter(departure_date_movie__gte=date)
-            print(movie)
+            #print(movie)
             cont=0
             movies=[]
             for a in movie:
-                print(a.premiere_date_movie)
+                #print(a.premiere_date_movie)
                 movies.append(a)
-                print(movies)
+                #print(movies)
                 #print(movies[cont])
+                print(datetime.strftime(a.premiere_date_movie,"%Y-%m-%d")>date)
+                print(cont)
                 if datetime.strftime(a.premiere_date_movie,"%Y-%m-%d")>date:
+                    print('pass')
                     movies[cont].premiere=True
                     serializer=serializable.moviesSerializable(movies[cont])
-                    print(movies[0])
                     return Response(serializer.data,status=status.HTTP_200_OK)
-                else:
-                    data={
-                        "name_movie":"No hay estreno",
-                        "photo_movie":"/media/movies/NoEstreno.jpeg",
-                        "category_movie":[],
-                        "actor_movie":[]
-                    }
-                    return Response(data,status=status.HTTP_200_OK)
+                cont+=1
+            print("None")
+            data={
+                "name_movie":"No hay estreno",
+                "photo_movie":"/media/movies/NoEstreno.jpeg",
+                "category_movie":[],
+                "actor_movie":[],
+                "premiere_date_movie":""
+            }
+            return Response(data,status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
             return Response("Internal Error",status=status.HTTP_500_INTERNAL_SERVER_ERROR)

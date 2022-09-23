@@ -38,15 +38,29 @@ class EmployeeNew(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = serializers.EmployeeSerializer(data=request.data)
+        try:
+            serializer = serializers.EmployeeSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                serializers.SendNew(serializer.data["first_name"]+" "+serializer.data["last_name"],
+                serializer.data['password'], serializer.data['email'])
+                return Response("Registrado correctamente", status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+
+class EmployeeUpdate(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def put(self,request,id):
+        employee=serializers.User.objects.get(pk=id)
+        print(employee)
+        serializer= serializers.EmployeeSerializerUpdate(instance=employee,data=request.data)
         if serializer.is_valid():
             serializer.save()
-            serializers.SendNew(serializer.data["first_name"]+" "+serializer.data["last_name"],
-            serializer.data['password'], serializer.data['email'])
-
-        return Response("Registrado correctamente", status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+            return Response("Actualizado correctamente",status=status.HTTP_200_OK)
+        return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
 
 class LastEmployee(APIView):
     def get(self, request):
@@ -213,8 +227,8 @@ class ExampleView(APIView):
 
 
 class ChangePassword(APIView):
-    authentication_classes = [SessionAuthentication,
-                              BasicAuthentication, TokenAuthentication]
+    authentication_classes = [JWTAuthentication,
+                              TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
