@@ -39,11 +39,18 @@ class moviesSerializable(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         category_movie_id = validated_data.pop('category_movie_id')
         actor_movie_id=validated_data.pop('actor_movie_id')
-        instance.title_movie = validated_data.get('title_movie', instance.title_movie)
+        instance.name_movie = validated_data.get('name_movie', instance.name_movie)
         instance.description_movie = validated_data.get('description_movie', instance.description_movie)
-        instance.release_date_movie = validated_data.get('release_date_movie', instance.release_date_movie)
-        instance.rating_movie = validated_data.get('rating_movie', instance.rating_movie)
+        instance.duration_movie = validated_data.get('duration_movie', instance.duration_movie)
+        instance.premiere_date_movie = validated_data.get('premiere_date_movie', instance.premiere_date_movie)
+        instance.photo_movie=validated_data.get('photo_movie',instance.photo_movie)
         instance.save()
+        for a in models.movies.objects.raw("SELECT * FROM movies_movies_actor_movie where movies_id= %s",[instance.id]):
+            print(a)
+            #a.delete()
+        for a in models.movies.objects.raw("SELECT * FROM movies_movies_category_movie where movies_id= %s",[instance.id]):
+            print(a)
+            #a.delete()
         for cm in category_movie_id:
             instance.category_movie.add(cm)
         for am in actor_movie_id:

@@ -1,4 +1,5 @@
 from datetime import datetime
+from gzip import READ
 from movies.api.views import *
 from django.utils import timezone
 from survey import models as survey
@@ -42,6 +43,22 @@ class Movies (APIView):
         return Response(movie.errors,status=status.HTTP_400_BAD_REQUEST)
 #        except Exception as e:
 #            return Response("Internal Error",status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class MovieUpdate (APIView):
+    def get(self, request, id):
+        movie = serializable.models.movies.objects.get(pk=id)
+        serializer = serializable.moviesSerializable(instance=movie)
+        return Response(serializer.data, status = status.HTTP_200_OK)
+    
+    def put(self, request, id):
+        movie = serializable.models.movies.objects.get(pk=id)
+        serializer = serializable.moviesSerializable(instance=movie, data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_200_OK)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+            
+
 
 
 class NextPremiere (APIView):

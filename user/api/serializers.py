@@ -111,6 +111,7 @@ class EmployeeSerializer(serializers.Serializer):
     email=serializers.EmailField()
     image=Base64ImageField(required=True,max_length=None,use_url=True)
     rol_id=serializers.IntegerField()
+    rol=serializers.CharField(read_only=True)
     ci=serializers.CharField(max_length=10)
     birth=serializers.DateField(format="%Y-%m-%d")
     branch_user=serializers.CharField(read_only=True)
@@ -150,18 +151,18 @@ class EmployeeSerializer(serializers.Serializer):
         instanceimage.rol_id=validate_data.get('rol_id',instanceimage.rol_id)
         instanceimage.birth=validate_data.get('birth',instanceimage.rol_id)
         instanceimage.save()
-        set_menu(instance.id,validate_data.get('rol_id'))
+        set_menu(instance.id,instanceimage.rol_id)
         return instance
     def validate_username(self,data):
         users= User.objects.filter(username=data)
         if len(users)!=0:
-            raise serializers.ValidationError({"Error user":"Este nombre de usuario ya esta en uso"})
+            raise serializers.ValidationError("Este nombre de usuario ya esta en uso")
         else:
             return data
     def validate_email(self,data):
         users= User.objects.filter(email=data)
         if len(users)!=0:
-            raise serializers.ValidationError({"Error email":"Este email ya esta en uso"})
+            raise serializers.ValidationError("Este email ya esta en uso")
         else:
             return data
     def validate_rol_id(self,data):
@@ -181,7 +182,7 @@ class EmployeeSerializerUpdate(serializers.Serializer):
     ci=serializers.CharField(max_length=10)
     birth=serializers.DateField(format="%Y-%m-%d")
     branch_user=serializers.CharField(read_only=True)
-    branch_user_id=serializers.IntegerField(write_only=True)
+    branch_user_id=serializers.IntegerField()
     def update(self,instance,validate_data):
         instance.first_name=validate_data.get('first_name',instance.first_name)
         instance.last_name=validate_data.get('last_name',instance.last_name)
@@ -189,7 +190,6 @@ class EmployeeSerializerUpdate(serializers.Serializer):
         instance.email=validate_data.get('email',instance.email)
         instance.save()
         instanceimage=image.objects.get(user=instance.id)
-        print(instanceimage)
         instanceimage.type='E'
         instanceimage.branch_user_id=validate_data.get('branch_user_id',instanceimage.branch_user_id)
         instanceimage.image=validate_data.get('image',instanceimage.image)

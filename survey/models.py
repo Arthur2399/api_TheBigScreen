@@ -13,6 +13,9 @@ class Survey_template(models.Model):
     question3=models.CharField(max_length=255)
     question4=models.CharField(max_length=255)
     question5=models.CharField(max_length=255)
+    def __str__(self):
+        return self.name
+        
 
 class Survey(models.Model):
     suervey_template=models.ForeignKey(Survey_template, on_delete=models.RESTRICT)

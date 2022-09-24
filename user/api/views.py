@@ -1,3 +1,4 @@
+from urllib import response
 from user.api import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -53,6 +54,30 @@ class EmployeeNew(APIView):
 class EmployeeUpdate(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    def get (self,request,id):
+        try:
+            image = serializers.image.objects.get(user_id=id)
+            if image.branch_user == None:
+                    branch = None
+            else:
+                    branch = image.branch_user.name_branch
+            data = {
+                "first_name":image.user.first_name,
+                "last_name":image.user.last_name,
+                "username":image.user.username,
+                "email":image.user.email,
+                "branch_user_id": image.branch_user_id,
+                "branch_user":branch,
+                "rol_id": image.rol.id,
+                "rol": image.rol.name,
+                "ci": image.ci,
+                "birth": image.birth,
+                "image": image.image
+            }
+            serializer= serializers.EmployeeSerializerUpdate(instance=data)
+            return Response(serializer.data, status= status.HTTP_200_OK)
+        except Exception as e:
+            return Response(str(e), status= status.HTTP_500_INTERNAL_SERVER_ERROR)
     def put(self,request,id):
         employee=serializers.User.objects.get(pk=id)
         print(employee)
