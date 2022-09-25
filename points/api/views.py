@@ -8,5 +8,5 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 from points.api import serializable
 from points.api.view.ticket import CreateTicket,ReadTicket,template
-from points.api.view.awards import AwardsList,AwardsCreate
+from points.api.view.awards import AwardsList,AwardsCreate,AwardsUpdate
 from points.api.view.transactions import TransactionCreate,prueba

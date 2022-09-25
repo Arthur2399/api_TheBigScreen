@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from points import models
 from drf_extra_fields.fields import Base64ImageField
-
+from djcines.settings import DIR,os
 class TicketsSerializers(serializers.ModelSerializer):
     timetable_ticket_id=serializers.IntegerField()
     timetable_ticket=serializers.CharField(read_only=True)
@@ -18,8 +18,22 @@ class AwardsSerializable(serializers.ModelSerializer):
     class Meta:
         model = models.Awards
         fields = '__all__'
-
-
+    
+class AwardsSerializableUpdate(serializers.ModelSerializer):
+    photo_award=Base64ImageField(max_length=None,use_url=True)
+    image_change=serializers.BooleanField(write_only=True)
+    class Meta:
+        model = models.Awards
+        fields = '__all__'
+    def update(self, instance, validated_data):
+        instance.name_award=validated_data.get("name_award",instance.name_award)
+        instance.number_award=validated_data.get("number_award",instance.number_award)
+        if validated_data.get('image_change'):
+            if os.path.exists(DIR+instance.photo_award.url):
+                os.remove(DIR+instance.photo_award.url)
+            instance.photo_award=validated_data.get('image',instance.photo_award)
+        instance.save()
+        return instance
 
 class TransactionsSerializable(serializers.ModelSerializer):
     class Meta:

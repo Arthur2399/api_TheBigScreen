@@ -9,6 +9,7 @@ urlpatterns = [
     #Awards
     path('awards/list', views.AwardsList.as_view(), name='awards list'),
     path('awards/create', views.AwardsCreate.as_view(), name='awards create'),
+    path('awards/update/<id>', views.AwardsUpdate.as_view(), name='awards Update'),
     #Transaction
     path('transaction/create', views.TransactionCreate.as_view(), name='transaction create'),
     path('transaction/prueba',views.prueba.as_view(),name="Prueba")

@@ -47,12 +47,12 @@ class Movies (APIView):
 class MovieUpdate (APIView):
     def get(self, request, id):
         movie = serializable.models.movies.objects.get(pk=id)
-        serializer = serializable.moviesSerializable(instance=movie)
+        serializer = serializable.moviesSerializableUpdate(instance=movie)
         return Response(serializer.data, status = status.HTTP_200_OK)
     
     def put(self, request, id):
         movie = serializable.models.movies.objects.get(pk=id)
-        serializer = serializable.moviesSerializable(instance=movie, data = request.data)
+        serializer = serializable.moviesSerializableUpdate(instance=movie, data = request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status = status.HTTP_200_OK)

@@ -5,7 +5,7 @@ from drf_extra_fields.fields import Base64ImageField
 from utils.random import get_random_string
 from django.core.mail import send_mail,EmailMultiAlternatives
 from django.template.loader import get_template
-from djcines.settings import DIR,EMAIL_HOST_USER
+from djcines.settings import DIR,EMAIL_HOST_USER,os
 from utils.QrGenerator import Generator
 from utils.crypt import encrypt,decrypt
 from menu import models as menu_models
@@ -70,6 +70,7 @@ def qr(id):
         path="/qr/"
         Generator(secret,path,fil)
         imageupdate=image.objects.filter(user=id).update(qrprofile=path+fil)
+        return True
 
 def set_menu(user_id,rol_id):
     assign=menu_models.assignment.objects.filter(user_id=user_id)
@@ -177,12 +178,13 @@ class EmployeeSerializerUpdate(serializers.Serializer):
     last_name=serializers.CharField(required=True)
     username=serializers.CharField()
     email=serializers.EmailField()
-    image=Base64ImageField(required=True,max_length=None,use_url=True)
+    image=Base64ImageField(required=False,max_length=None,use_url=True)
     rol_id=serializers.IntegerField()
     ci=serializers.CharField(max_length=10)
     birth=serializers.DateField(format="%Y-%m-%d")
     branch_user=serializers.CharField(read_only=True)
     branch_user_id=serializers.IntegerField()
+    image_change=serializers.BooleanField(write_only=True)
     def update(self,instance,validate_data):
         instance.first_name=validate_data.get('first_name',instance.first_name)
         instance.last_name=validate_data.get('last_name',instance.last_name)
@@ -192,14 +194,18 @@ class EmployeeSerializerUpdate(serializers.Serializer):
         instanceimage=image.objects.get(user=instance.id)
         instanceimage.type='E'
         instanceimage.branch_user_id=validate_data.get('branch_user_id',instanceimage.branch_user_id)
-        instanceimage.image=validate_data.get('image',instanceimage.image)
+        print(validate_data.get("image_change"))
+        if validate_data.get("image_change"):
+            if os.path.exists(DIR+instanceimage.image.url):
+                os.remove(DIR+instanceimage.image.url)
+            instanceimage.image=validate_data.get('image',instanceimage.image)
         instanceimage.ci=validate_data.get('ci',instanceimage.ci)
+        print(validate_data.get('rol_id'))
         instanceimage.rol_id=validate_data.get('rol_id',instanceimage.rol_id)
         instanceimage.birth=validate_data.get('birth',instanceimage.rol_id)
         instanceimage.save()
         set_menu(instance.id,validate_data.get('rol_id'))
         return instance
-
 
 class UserGetSerializer(serializers.Serializer):
     id= serializers.IntegerField(read_only=True)

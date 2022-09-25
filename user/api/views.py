@@ -43,8 +43,8 @@ class EmployeeNew(APIView):
             serializer = serializers.EmployeeSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                serializers.SendNew(serializer.data["first_name"]+" "+serializer.data["last_name"],
-                serializer.data['password'], serializer.data['email'])
+                print(serializer.data)
+                serializers.SendNew(serializer.data["first_name"]+" "+serializer.data["last_name"],serializer.data['password'], serializer.data['email'])
                 return Response("Registrado correctamente", status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
@@ -80,7 +80,6 @@ class EmployeeUpdate(APIView):
             return Response(str(e), status= status.HTTP_500_INTERNAL_SERVER_ERROR)
     def put(self,request,id):
         employee=serializers.User.objects.get(pk=id)
-        print(employee)
         serializer= serializers.EmployeeSerializerUpdate(instance=employee,data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -113,8 +112,7 @@ class EmployeeList(APIView):
     def get(self, request):
         data = []
         datas = {}
-        for i in image.objects.filter(type="E"):
-            print(i.branch_user_id)
+        for i in image.objects.filter(type="E",user__is_active=True).order_by("rol_id","user__first_name"):
             if i.branch_user == None:
                 branch = "Null"
             else:
@@ -211,6 +209,17 @@ class UserProfile(APIView):
         # serializer=serializers.UserGetSerializer(data=data,many=True)
         return Response(datas, status=status.HTTP_200_OK)
 
+class employeeDesactivate(APIView):
+    authentication_classes = [JWTAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    def delete(self,request,id):
+        try:
+            user=serializers.User.objects.get(pk=id)
+            user.is_active=False
+            user.save()
+            return Response("Desactivado correctamente",status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class LoginMovil(APIView):
     authentication_classes = [SessionAuthentication,
@@ -226,8 +235,7 @@ class LoginMovil(APIView):
 
 
 class LoginWeb(APIView):
-    authentication_classes = [SessionAuthentication,
-                              BasicAuthentication, TokenAuthentication]
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
