@@ -71,7 +71,8 @@ class CreateTicket(APIView):
                         serializable.models.Credits.objects.filter(id=serializer.data["credits_ticket"]).update(number_credits=fields["balance"])
                         movie_id=models.Timetable.objects.filter(id=fields["timetable_ticket_id"]).first().schedule_timetable.movies_schedule
                         user_id=models.Credits.objects.filter(id=fields["credits_ticket_id"]).first().user_id
-                        createsurvey(user_id,movie_id,fields["branch_ticket_id"])
+                        movie_id=serializable.models.Timetable.objects.filter(id=fields["timetable_ticket_id"]).first().schedule_timetable.movies_schedule_id
+                        create=createsurvey(user_id,movie_id,fields["branch_ticket_id"])
             else:
                 template=surveys.Survey_template.objects.filter(state=1).first()
                 if template==None:
