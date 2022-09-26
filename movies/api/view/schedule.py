@@ -49,7 +49,7 @@ class GetBillboardSchedule(APIView):
         time=timezone.now().strftime("%H:%M:%S")
         print(time)
         print(date)
-        for i in models.Schedule.objects.raw("select * from movies_schedule inner join movies_movies on movies_schedule.movies_schedule_id= movies_movies.id where id=%s and %s between movies_movies.premiere_date_movie and movies_movies.departure_date_movie",[id,date]):
+        for i in models.Schedule.objects.raw("select * from movies_schedule inner join movies_movies on movies_schedule.movies_schedule_id= movies_movies.id where movies_schedule.id=%s and %s between movies_movies.premiere_date_movie and movies_movies.departure_date_movie",[id,date]):
             billboard={}
             cont=0
             timep=[]
