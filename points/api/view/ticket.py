@@ -32,7 +32,7 @@ class CreateTicket(APIView):
         if serializer.is_valid():
             fields={}
             template=False
-            timeTable=serializable.models.Timetable.get(pk=serializer.data["timetable_ticket_id"])
+            timeTable=serializable.models.Timetable.objects.get(pk=serializer.data["timetable_ticket_id"])
             if serializer.data["credits_ticket"]!=None:
                 print(serializer.data["credits_ticket"])
                 user=""
