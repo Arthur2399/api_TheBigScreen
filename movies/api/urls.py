@@ -23,4 +23,5 @@ urlpatterns = [
     path('timetables/create', views.TimetableCreate.as_view(), name='list timetables'),
     #billboard
     path('billboard', views.Billboard.as_view(), name='list billboard'),
+    path('billboard/<id>',views.GetBillboardSchedule.as_view,name="Get Bilboard by id")
 ]

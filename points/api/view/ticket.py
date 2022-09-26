@@ -1,4 +1,3 @@
-
 from points.api.views import *
 from survey import models as surveys
 
@@ -31,9 +30,9 @@ class CreateTicket(APIView):
     def post(self,request):
         serializer=serializable.TicketsSerializers(data=request.data)
         if serializer.is_valid():
-            print(serializer.data)
             fields={}
             template=False
+            timeTable=serializable.models.Timetable.get(pk=serializer.data["timetable_ticket_id"])
             if serializer.data["credits_ticket"]!=None:
                 print(serializer.data["credits_ticket"])
                 user=""
@@ -52,8 +51,8 @@ class CreateTicket(APIView):
                             "totalcredit":None,
                             "balance":serializer.data["value"],
                             "qrImage":serializer.data["qrImage"],
-                            "branch_ticket_id":serializer.data["branch_ticket"],
-                            "date_functions":serializer.data["date_functions"]
+                            "branch_ticket_id":timeTable.schedule_timetable.branch_schedule.id,
+                            "date_functions":timeTable.day_timetable
                         }
                     else:
                         vtemplate=True
@@ -65,8 +64,8 @@ class CreateTicket(APIView):
                             "totalcredit":total,
                             "balance":total+serializer.data["value"],
                             "qrImage":serializer.data["qrImage"],
-                            "branch_ticket_id":serializer.data["branch_ticket"],
-                            "date_functions":serializer.data["date_functions"],
+                            "branch_ticket_id":timeTable.schedule_timetable.branch_schedule.id,
+                            "date_functions":timeTable.day_timetable,
                             "state":2
                         }
                         serializable.models.Credits.objects.filter(id=serializer.data["credits_ticket"]).update(number_credits=fields["balance"])
@@ -87,8 +86,8 @@ class CreateTicket(APIView):
                     "totalcredit":None,
                     "balance":serializer.data["value"],
                     "qrImage":serializer.data["qrImage"],
-                    "branch_ticket_id":serializer.data["branch_ticket"],
-                    "date_functions":serializer.data["date_functions"]
+                    "branch_ticket_id":timeTable.schedule_timetable.branch_schedule.id,
+                    "date_functions":timeTable.day_timetable
                 }
             print(fields)
             #serializer.save()

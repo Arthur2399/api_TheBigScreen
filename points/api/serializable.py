@@ -6,6 +6,8 @@ class TicketsSerializers(serializers.ModelSerializer):
     timetable_ticket_id=serializers.IntegerField()
     timetable_ticket=serializers.CharField(read_only=True)
     value=serializers.IntegerField(default=100)
+    date_functions=serializers.DateField(required=False)
+    branch_ticket=serializers.IntegerField(Required=False)
     class Meta:
         model = models.Ticket
         fields = '__all__'

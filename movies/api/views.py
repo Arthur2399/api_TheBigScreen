@@ -6,5 +6,5 @@ from movies import models
 from movies.api.view.actors import Actors
 from movies.api.view.categories import Categories
 from movies.api.view.movie import Movies,NextPremiere,bestMovie,bestMovie5,MovieUpdate   
-from movies.api.view.schedule import ScheduleList,ScheduleCreate,Billboard
+from movies.api.view.schedule import ScheduleList,ScheduleCreate,Billboard,GetBillboardSchedule
 from movies.api.view.timetable import TimetableList,TimetableCreate

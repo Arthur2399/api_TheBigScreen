@@ -41,5 +41,32 @@ class Billboard(APIView):
                 billboards.append(billboard)
 
         return Response(billboards)
+
+class GetBillboardSchedule(APIView):
+    def get(self,request,id):
+        billboards = []
+        date=timezone.now().strftime("%Y-%m-%d")
+        time=timezone.now().strftime("%H:%M:%S")
+        print(time)
+        print(date)
+        for i in models.Schedule.objects.raw("select * from movies_schedule inner join movies_movies on movies_schedule.movies_schedule_id= movies_movies.id where id=%s and %s between movies_movies.premiere_date_movie and movies_movies.departure_date_movie",[id,date]):
+            billboard={}
+            cont=0
+            timep=[]
+            for j in models.Timetable.objects.filter(schedule_timetable_id=i.id,day_timetable=date,hour_timetable__gte=time).order_by("hour_timetable"):
+                timep.append({"id":j.id,"time":j.hour_timetable.strftime('%H:%M'),"room":j.room})
+                cont+=1
+            if len(timep)>0:
+                billboard={
+                    'id':i.id,
+                    'movie_name':i.movies_schedule.name_movie,
+                    'movie_photo':i.movies_schedule.photo_movie.url,
+                    'branch':i.branch_schedule.name_branch,
+                    'movie_date':date,
+                    'billboard':timep
+                }
+                billboards.append(billboard)
+
+        return Response(billboards)
             
             
