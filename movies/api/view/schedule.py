@@ -39,13 +39,7 @@ class Billboard(APIView):
                     'billboard':timep
                 }
                 billboards.append(billboard)
-            json={
-                "data":billboards,
-                "meta":{
-                    "status":200,
-                    "msg":"OK"
-                }
-            }
-        return Response(json)
+
+        return Response(billboards)
             
             

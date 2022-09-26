@@ -41,6 +41,25 @@ class SurveyTemplateList(APIView):
         except Exception as e:
             return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class SurveyTemplateUpdate(APIView):
+    def get(self,request,id):
+        try:
+            suervey_template= serializable.models.Survey_template.objects.get(pk=id)
+            serial= serializable.SurveyTemplateSerializer(suervey_template)
+            return Response(serial.data,status=status.HTTP_200_OK)            
+        except Exception as e:
+            return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def put(self,request,id):
+        try:
+            suervey_template= serializable.models.Survey_template.objects.get(pk=id)
+            serial= serializable.SurveyTemplateSerializer(suervey_template,data=request.data)
+            if serial.is_valid():
+                serial.save()
+                return Response(serial.data,status=status.HTTP_200_OK)
+            return Response(serial.errors,status=status.HTTP_400_BAD_REQUEST)            
+        except Exception as e:
+            return Response(str(e),status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class mobilSurvey(APIView):
     permission_classes = (IsAuthenticated,)
