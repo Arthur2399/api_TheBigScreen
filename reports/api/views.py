@@ -99,8 +99,9 @@ class reportGlobal(APIView):
         sql="""
         SELECT 1 id , "sum"(answer1) as a1, "sum"(answer2) a2, "sum"(answer3) as a3, "sum"(answer4) as a4 from survey_survey where status = 2;
         """
-        data=[]
+        data=[0,0,0,0]
         for x in survey_models.Survey.objects.raw(sql):
+            print(x)
             data=[x["a1"],x["a2"],x["a3"],x["a4"]]
         return Response(data,status.HTTP_200_OK)
 
