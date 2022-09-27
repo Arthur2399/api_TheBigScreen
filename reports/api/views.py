@@ -93,3 +93,14 @@ class report_survey(APIView):
                     }
             return Response(finals,status=status.HTTP_200_OK)
         return Response(serialize.errors,status=status.HTTP_400_BAD_REQUEST)
+
+class reportGlobal(APIView):
+    def get(self,request):
+        sql="""
+        SELECT 1 id , "sum"(answer1) as a1, "sum"(answer2) a2, "sum"(answer3) as a3, "sum"(answer4) as a4 from survey_survey where status = 2;
+        """
+        data=[]
+        for x in survey_models.Survey.objects.raw(sql):
+            data=[x["a1"],x["a2"],x["a3"],x["a4"]]
+        return Response(data,status.HTTP_200_OK)
+
