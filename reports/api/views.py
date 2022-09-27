@@ -101,7 +101,6 @@ class reportGlobal(APIView):
         """
         data=[0,0,0,0]
         for x in survey_models.Survey.objects.raw(sql):
-            print(x)
-            data=[x["a1"],x["a2"],x["a3"],x["a4"]]
+            data=[x.a1,x.a2,x.a3,x.a4]
         return Response(data,status.HTTP_200_OK)
 
